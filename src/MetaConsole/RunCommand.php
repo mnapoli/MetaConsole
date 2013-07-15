@@ -5,6 +5,7 @@
 
 namespace MetaConsole;
 
+use Doctrine\Common\Util\Debug;
 use MetaModel\MetaModel;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -44,7 +45,7 @@ class RunCommand extends Command
     {
         $result = $this->metaModel->run($input->getArgument('expression'));
 
-        var_dump($result);
+        Debug::dump($result);
 
         return 0;
     }
