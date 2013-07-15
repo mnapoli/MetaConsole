@@ -14,11 +14,5 @@
         "doctrine/orm": "2.3.*"
     },
     "minimum-stability": "dev",
-    "prefer-stable": true,
-    "repositories": [
-        {
-            "type": "git",
-            "url": "https://github.com/mnapoli/MetaModel.git"
-        }
-    ]
+    "prefer-stable": true
 }
