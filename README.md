@@ -2,7 +2,7 @@
 
 ![Demo](screen.gif)
 
-MetaConsole is a CLI console that enables you to execute MetaModel expressions.
+MetaConsole is a CLI console that enables you to execute [MetaModel](https://github.com/mnapoli/MetaModel) expressions.
 
 You can use MetaConsole to debug your app and your data without having to type SQL queries, or to endure the pain of using phpMyAdmin & co.
 
