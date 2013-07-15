@@ -27,7 +27,12 @@ class Bootstrap
 
         // Create data
 		$article = new Article(1);
-		$this->entityManager->persist($article);
+        $category = new Category(1);
+        $article->setCategory($category);
+        $category->addArticle($article);
+        $this->entityManager->persist($article);
+        $this->entityManager->persist($category);
+
         $article = new Article(2);
         $this->entityManager->persist($article);
 
