@@ -8,4 +8,7 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-\MetaConsole\Application::createAndRun();
+// Replace with your configured MetaModel
+$metaModel = null;
+
+\MetaConsole\Application::createAndRun($metaModel);

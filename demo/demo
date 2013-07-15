@@ -18,4 +18,4 @@ $metaModel = new MetaModel();
 $metaModel->addObjectManager(new EntityManagerBridge($entityManager));
 
 // Run MetaConsole
-\MetaConsole\Application::createAndRun();
+\MetaConsole\Application::createAndRun($metaModel);
