@@ -1,0 +1,21 @@
+{
+    "name": "mnapoli/metaconsole",
+    "type": "library",
+	"autoload": {
+		"psr-0": {
+			"MetaConsole": "src/"
+		}
+	},
+	"require": {
+		"mnapoli/metamodel": "dev-master",
+		"symfony/console": "2.3.*"
+	},
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "repositories": [
+        {
+            "type": "git",
+            "url": "https://github.com/mnapoli/MetaModel.git"
+        }
+    ]
+}
