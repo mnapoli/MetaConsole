@@ -32,7 +32,7 @@ class Application extends \Symfony\Component\Console\Application
      */
     protected function getCommandName(InputInterface $input)
     {
-        return 'run';
+        return 'console';
     }
 
     /**
@@ -44,10 +44,10 @@ class Application extends \Symfony\Component\Console\Application
         // which is used when using the --help option
         $defaultCommands = parent::getDefaultCommands();
 
-        $runCommand = new RunCommand();
-        $runCommand->setMetaModel($this->metaModel);
+        $consoleCommand = new ConsoleCommand();
+        $consoleCommand->setMetaModel($this->metaModel);
 
-        $defaultCommands[] = $runCommand;
+        $defaultCommands[] = $consoleCommand;
 
         return $defaultCommands;
     }
