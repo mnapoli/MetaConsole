@@ -1,0 +1,21 @@
+#!/usr/bin/env php
+<?php
+/**
+ * Demo
+ * Run me!
+ */
+
+use MetaModel\Bridge\Doctrine\EntityManagerBridge;
+use MetaModel\MetaModel;
+
+require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/Bootstrap.php';
+
+$bootstrap = new Bootstrap();
+$entityManager = $bootstrap->getEntityManager();
+
+$metaModel = new MetaModel();
+$metaModel->addObjectManager(new EntityManagerBridge($entityManager));
+
+// Run MetaConsole
+\MetaConsole\Application::createAndRun();
