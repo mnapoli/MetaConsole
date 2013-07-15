@@ -1,8 +1,11 @@
 #!/usr/bin/env php
 <?php
-use MetaConsole\Application;
+/**
+ * MetaConsole script.
+ *
+ * Copy to your project and include your application's bootstrap file.
+ */
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-$console = new Application('MetaConsole');
-$console->run();
+\MetaConsole\Application::createAndRun();

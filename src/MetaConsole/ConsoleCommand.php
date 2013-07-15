@@ -1,7 +1,4 @@
 <?php
-/**
- * @author matthieu.napoli
- */
 
 namespace MetaConsole;
 
@@ -14,7 +11,9 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Run command
+ * Run command.
+ *
+ * @author Matthieu Napoli <matthieu@mnapoli.fr>
  */
 class ConsoleCommand extends Command
 {
@@ -44,10 +43,15 @@ class ConsoleCommand extends Command
         $formatter = $this->getHelperSet()->get('formatter');
 
         while (true) {
-            $expression = $dialog->ask(
-                $output,
-                '>>> '
-            );
+            try {
+                $expression = $dialog->ask(
+                    $output,
+                    '>>> '
+                );
+            } catch (\RuntimeException $e) {
+                // End of file
+                return 0;
+            }
 
             if ($expression == '') {
                 continue;
