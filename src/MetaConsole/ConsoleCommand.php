@@ -3,6 +3,7 @@
 namespace MetaConsole;
 
 use MetaModel\MetaModel;
+use NumberTwo\Filter\DoctrineCollectionFilter;
 use NumberTwo\NumberTwo;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\DialogHelper;
@@ -42,6 +43,8 @@ class ConsoleCommand extends Command
         /** @var FormatterHelper $formatter */
         $formatter = $this->getHelperSet()->get('formatter');
 
+        $dumpFilters = [new DoctrineCollectionFilter()];
+
         while (true) {
             try {
                 $expression = $dialog->ask(
@@ -65,7 +68,7 @@ class ConsoleCommand extends Command
             try {
                 $result = $this->metaModel->run($expression);
 
-                echo NumberTwo::dump($result) . PHP_EOL;
+                echo NumberTwo::dump($result, 2, $dumpFilters) . PHP_EOL;
             } catch (\Exception $e) {
                 $block = [
                     get_class($e),
