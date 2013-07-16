@@ -2,8 +2,8 @@
 
 namespace MetaConsole;
 
-use Doctrine\Common\Util\Debug;
 use MetaModel\MetaModel;
+use NumberTwo\NumberTwo;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\DialogHelper;
 use Symfony\Component\Console\Helper\FormatterHelper;
@@ -65,7 +65,7 @@ class ConsoleCommand extends Command
             try {
                 $result = $this->metaModel->run($expression);
 
-                Debug::dump($result);
+                echo NumberTwo::dump($result) . PHP_EOL;
             } catch (\Exception $e) {
                 $block = [
                     get_class($e),
