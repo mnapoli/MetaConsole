@@ -8,7 +8,7 @@
 	},
     "require": {
         "mnapoli/metamodel": "dev-master",
-        "mnapoli/number-two": "dev-master",
+        "mnapoli/number-two": "0.1.*",
         "symfony/console": "2.3.*"
     },
     "require-dev": {
