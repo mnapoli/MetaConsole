@@ -45,7 +45,7 @@ class ConsoleCommand extends Command
 
         $dumpFilters = [new DoctrineCollectionFilter()];
 
-        $output->writeln("Welcome in the MetaConsole, type ? for help");
+        $output->writeln("<info>Welcome in the MetaConsole, type ? for help</info>");
 
         while (true) {
             $output->writeln("");
