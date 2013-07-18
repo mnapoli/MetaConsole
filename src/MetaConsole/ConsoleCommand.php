@@ -2,6 +2,7 @@
 
 namespace MetaConsole;
 
+use MetaConsole\SymfonyConsoleHelper\ShellHelper;
 use MetaModel\MetaModel;
 use NumberTwo\Filter\DoctrineCollectionFilter;
 use NumberTwo\NumberTwo;
@@ -38,8 +39,9 @@ class ConsoleCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        /** @var DialogHelper $dialog */
-        $dialog = $this->getHelperSet()->get('dialog');
+        $this->getHelperSet()->set(new ShellHelper());
+        /** @var ShellHelper $shell */
+        $shell = $this->getHelperSet()->get('shell');
         /** @var FormatterHelper $formatter */
         $formatter = $this->getHelperSet()->get('formatter');
 
@@ -50,10 +52,11 @@ class ConsoleCommand extends Command
         while (true) {
             $output->writeln("");
             try {
-                $expression = $dialog->ask(
+                $expression = $shell->prompt(
                     $output,
                     '>>> '
                 );
+                $output->writeln("\"$expression\"");
             } catch (\RuntimeException $e) {
                 // End of file
                 return 0;
