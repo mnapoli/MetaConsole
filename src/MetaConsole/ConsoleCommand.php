@@ -45,7 +45,10 @@ class ConsoleCommand extends Command
 
         $dumpFilters = [new DoctrineCollectionFilter()];
 
+        $output->writeln("Welcome in the MetaConsole, type ? for help");
+
         while (true) {
+            $output->writeln("");
             try {
                 $expression = $dialog->ask(
                     $output,
@@ -57,6 +60,12 @@ class ConsoleCommand extends Command
             }
 
             if ($expression == '') {
+                continue;
+            }
+
+            // Help
+            if ($expression == '?' || $expression == 'help') {
+                $this->showHelp($output, $formatter);
                 continue;
             }
 
@@ -87,5 +96,21 @@ class ConsoleCommand extends Command
     public function setMetaModel($metaModel)
     {
         $this->metaModel = $metaModel;
+    }
+
+    private function showHelp(OutputInterface $output, FormatterHelper $formatter)
+    {
+        $help = <<<HELP
+To exit, type 'exit'.
+
+# Selectors
+My\Entity(1)
+My\Entity being the class name of the entity, 1 being the ID of the entity to load.
+
+# Property access
+Article(1).title
+Article(1).author.name
+HELP;
+        $output->writeln($formatter->formatBlock($help, 'info'));
     }
 }
