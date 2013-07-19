@@ -103,6 +103,11 @@ class ConsoleCommand extends Command
                 return 0;
             }
 
+            // Exit
+            if ($expression === 0 || $expression == 'quit' || $expression == 'exit') {
+                return 0;
+            }
+
             if ($expression == '') {
                 continue;
             }
@@ -111,11 +116,6 @@ class ConsoleCommand extends Command
             if ($expression == '?' || $expression == 'help') {
                 $this->showHelp($output, $formatter);
                 continue;
-            }
-
-            // Exit
-            if ($expression == 'quit' || $expression == 'exit') {
-                return 0;
             }
 
             try {

@@ -24,7 +24,6 @@ class ShellHelper extends Helper
      *
      * @throws \RuntimeException If there is no data to read in the input stream
      * @return string The user answer
-     *
      */
     public function prompt(OutputInterface $output, $prefix, callable $autocomplete = null, callable $searchHistory = null)
     {
@@ -111,6 +110,10 @@ class ShellHelper extends Helper
                         }
                     }
                     continue;
+                } elseif (4 === ord($c)) {
+                    // End of file = quit
+                    $command = 0;
+                    break;
                 } elseif (ord($c) < 32) {
                     // Return
                     if ("\n" === $c) {
@@ -144,6 +147,11 @@ class ShellHelper extends Helper
 
             // Reset stty so it behaves normally again
             shell_exec(sprintf('stty %s', $sttyMode));
+        }
+
+        // Int = error code
+        if (is_int($command)) {
+            return $command;
         }
 
         return strlen($command) > 0 ? $command : null;
