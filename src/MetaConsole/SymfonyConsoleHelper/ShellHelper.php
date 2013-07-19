@@ -17,15 +17,16 @@ class ShellHelper extends Helper
     /**
      * Asks a question to the user.
      *
-     * @param OutputInterface $output       An Output instance
-     * @param string          $prefix       The shell prefix
-     * @param callable        $autocomplete Callback to autocomplete
+     * @param OutputInterface $output        An Output instance
+     * @param string          $prefix        The shell prefix
+     * @param callable        $autocomplete  Callback to autocomplete
+     * @param callable        $searchHistory Callback to search history
      *
      * @throws \RuntimeException If there is no data to read in the input stream
      * @return string The user answer
      *
      */
-    public function prompt(OutputInterface $output, $prefix, callable $autocomplete = null)
+    public function prompt(OutputInterface $output, $prefix, callable $autocomplete = null, callable $searchHistory = null)
     {
         $output->write($prefix);
 
@@ -41,6 +42,10 @@ class ShellHelper extends Helper
             $command = '';
 
             $i = 0;
+
+            // History search
+            $historySearchCommand = null;
+            $historyPosition = null;
 
             $sttyMode = shell_exec('stty -g');
 
@@ -62,14 +67,50 @@ class ShellHelper extends Helper
                     }
                 } elseif ("\033" === $c) { // Did we read an escape sequence?
                     $c .= fread($inputStream, 2);
-
-                    // A = Up Arrow. B = Down Arrow
-                    if ('A' === $c[2] || 'B' === $c[2]) {
-                        if ('A' === $c[2]) {
-                            // TODO
+                    // Up Arrow
+                    if ('A' === $c[2] && $searchHistory) {
+                        // Save initial command searched
+                        if ($historySearchCommand === null) {
+                            $historySearchCommand = $command;
                         }
-                        continue;
+
+                        // Search history backwards
+                        $result = $searchHistory($historySearchCommand, $historyPosition);
+                        if ($result) {
+                            $autocompletedCommand = $result['command'];
+                            $historyPosition = $result['position'];
+                            // Replace current command
+                            $this->replaceCurrentCommand($output, $command, $autocompletedCommand);
+                            $command = $autocompletedCommand;
+                            $i = strlen($command);
+                        }
                     }
+                    // Down Arrow
+                    if ('B' === $c[2] && $searchHistory) {
+                        // Save initial command searched
+                        if ($historySearchCommand === null) {
+                            $historySearchCommand = $command;
+                        }
+
+                        // Search history forward
+                        $result = $searchHistory($historySearchCommand, $historyPosition, false);
+                        if ($result) {
+                            $autocompletedCommand = $result['command'];
+                            $historyPosition = $result['position'];
+                            // Replace current command
+                            $this->replaceCurrentCommand($output, $command, $autocompletedCommand);
+                            $command = $autocompletedCommand;
+                            $i = strlen($command);
+                        } else {
+                            // Restore initial command searched
+                            $this->replaceCurrentCommand($output, $command, $historySearchCommand);
+                            $command = $historySearchCommand;
+                            $i = strlen($command);
+                            $historySearchCommand = null;
+                            $historyPosition = null;
+                        }
+                    }
+                    continue;
                 } elseif (ord($c) < 32) {
                     // Return
                     if ("\n" === $c) {
@@ -87,9 +128,14 @@ class ShellHelper extends Helper
                     }
                     continue;
                 } else {
+                    // Normal character typed
                     $output->write($c);
                     $command .= $c;
                     $i++;
+
+                    // Reset history search
+                    $historySearchCommand = null;
+                    $historyPosition = null;
                 }
 
                 // Erase characters from cursor to end of line
@@ -125,6 +171,29 @@ class ShellHelper extends Helper
         return $this->inputStream;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public function getName()
+    {
+        return 'shell';
+    }
+
+    private function replaceCurrentCommand(OutputInterface $output, $oldCommand, $newCommand)
+    {
+        // Clear text typed
+        for ($i = 0; $i < strlen($oldCommand); $i++) {
+            // Move cursor back
+            $output->write("\033[1D");
+            // Print space
+            $output->write(" ");
+            // Move cursor back again
+            $output->write("\033[1D");
+        }
+        // Type new command
+        $output->write($newCommand);
+    }
+
     private function hasSttyAvailable()
     {
         if (null !== self::$stty) {
@@ -134,13 +203,5 @@ class ShellHelper extends Helper
         exec('stty 2>&1', $output, $exitcode);
 
         return self::$stty = $exitcode === 0;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getName()
-    {
-        return 'shell';
     }
 }

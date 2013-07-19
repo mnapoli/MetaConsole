@@ -49,14 +49,55 @@ class ConsoleCommand extends Command
 
         $output->writeln("<info>Welcome in the MetaConsole, type ? for help</info>");
 
+        $commandHistory = [];
+
+        $searchHistory = function($command, $start = null, $backward = true) use (&$commandHistory) {
+            if ($backward) {
+                if ($start === null || $start < 0 || $start >= count($commandHistory)) {
+                    $start = count($commandHistory) - 1;
+                } else {
+                    $start = $start - 1;
+                }
+                for ($i = $start; $i >= 0; $i--) {
+                    $oldCommand = $commandHistory[$i];
+                    if ($command == '' || strpos($oldCommand, $command) === 0) {
+                        return [
+                            'position' => $i,
+                            'command'  => $oldCommand
+                        ];
+                    }
+                }
+                return null;
+            } else {
+                if ($start === null || $start < 0 || $start >= count($commandHistory)) {
+                    return null;
+                } else {
+                    $start = $start + 1;
+                }
+                for ($i = $start; $i < count($commandHistory); $i++) {
+                    $oldCommand = $commandHistory[$i];
+                    if ($command == '' || strpos($oldCommand, $command) === 0) {
+                        return [
+                            'position' => $i,
+                            'command'  => $oldCommand
+                        ];
+                    }
+                }
+                return null;
+            }
+        };
+
         while (true) {
             $output->writeln("");
             try {
                 $expression = $shell->prompt(
                     $output,
-                    '>>> '
+                    '>>> ',
+                    null,
+                    $searchHistory
                 );
-                $output->writeln("\"$expression\"");
+                // Add to history
+                $commandHistory[] = $expression;
             } catch (\RuntimeException $e) {
                 // End of file
                 return 0;
