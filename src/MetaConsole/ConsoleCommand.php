@@ -5,6 +5,7 @@ namespace MetaConsole;
 use MetaConsole\SymfonyConsoleHelper\ShellHelper;
 use MetaModel\MetaModel;
 use NumberTwo\Filter\DoctrineCollectionFilter;
+use NumberTwo\Filter\DoctrineProxyFilter;
 use NumberTwo\NumberTwo;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\DialogHelper;
@@ -45,7 +46,7 @@ class ConsoleCommand extends Command
         /** @var FormatterHelper $formatter */
         $formatter = $this->getHelperSet()->get('formatter');
 
-        $dumpFilters = [new DoctrineCollectionFilter()];
+        $dumpFilters = [new DoctrineCollectionFilter(), DoctrineProxyFilter()];
 
         $output->writeln("<info>Welcome in the MetaConsole, type ? for help</info>");
 
