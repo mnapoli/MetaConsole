@@ -46,7 +46,7 @@ class ConsoleCommand extends Command
         /** @var FormatterHelper $formatter */
         $formatter = $this->getHelperSet()->get('formatter');
 
-        $dumpFilters = [new DoctrineCollectionFilter(), DoctrineProxyFilter()];
+        $dumpFilters = [new DoctrineCollectionFilter(), new DoctrineProxyFilter()];
 
         $output->writeln("<info>Welcome in the MetaConsole, type ? for help</info>");
 
